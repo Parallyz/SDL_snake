@@ -1,8 +1,5 @@
 #define SDL_MAIN_HANDLED
 
-
-
-
 #include<iostream>
 #include<SDL.h>
 #include <SDL_image.h>
@@ -71,10 +68,10 @@ LTexture* BodyTexture = new LTexture;
 LTexture* DirectionTexture = new LTexture;
 
 
-class Snake  {
+class Snake {
 	int xPosDirection;
 	int yPosDirection;
-	int lenghtSnake=2;
+	int lenghtSnake = 2;
 	Direction currentDirection;
 	Direction previousDirection;
 	std::list<LTexture>* SnakeTextures;
@@ -83,7 +80,7 @@ public:
 	Snake()
 	{
 		lenghtSnake = 2;
-		this->SnakeTextures =new std::list<LTexture>();
+		this->SnakeTextures = new std::list<LTexture>();
 		currentDirection = RIGHT;
 		previousDirection = RIGHT;
 		xPosDirection = 0;
@@ -128,21 +125,43 @@ public:
 		int i = SnakeTextures->begin()->getWidth();
 		for (it = SnakeTextures->begin(); it != SnakeTextures->end(); ++it) {
 			it->render(x - i, y);
-			i+= SnakeTextures->begin()->getWidth();
-		}
-		
-	}
-	void renderVertical(int x, int y)
-	{
-		std::list<LTexture>::iterator it;
-		int i = SnakeTextures->begin()->getWidth();
-		for (it = SnakeTextures->begin(); it != SnakeTextures->end(); ++it) {
-			it->render(x , y-i);
 			i += SnakeTextures->begin()->getWidth();
 		}
 
 	}
-	
+	void renderVertical(int x, int y,bool isUp)
+	{
+		std::list<LTexture>::iterator it;
+		int i = SnakeTextures->begin()->getWidth();
+		for (it = SnakeTextures->begin(); it != SnakeTextures->end(); ++it) {
+			if(!isUp)
+				it->render(x, y - i);
+			else {
+				it->render(x, y + i);
+			}
+			i += SnakeTextures->begin()->getWidth();
+		}
+
+	}
+
+	void SwapHeadWithTail()
+	{
+		std::list<LTexture>::iterator first;
+		std::list<LTexture>* newSnake;
+		newSnake->push_back(*head);
+		newSnake->push_back(*body);
+		newSnake->push_back(*body);
+		newSnake->push_back(*body);
+		newSnake->push_back(*body);
+		newSnake->push_back(*body);
+
+
+		LTexture* tail = TailTexture->loadFromFile("tail.png");
+
+		this->SnakeTextures->push_back(*tail);
+		//std::swap(first, last);
+	}
+
 	bool loadFromFile()
 	{
 		LTexture* head = HeadTexture->loadFromFile("head.png");
@@ -156,8 +175,8 @@ public:
 		this->SnakeTextures->push_back(*body);
 		this->SnakeTextures->push_back(*body);
 
-		
-		LTexture* tail= TailTexture->loadFromFile("tail.png");
+
+		LTexture* tail = TailTexture->loadFromFile("tail.png");
 
 		this->SnakeTextures->push_back(*tail);
 
@@ -175,7 +194,7 @@ void close();
 
 
 
-Snake* mSnakeTexture= new Snake;
+Snake* mSnakeTexture = new Snake;
 
 //Buttons objects
 
@@ -206,7 +225,7 @@ LTexture* LTexture::loadFromFile(std::string path)
 	SDL_Texture* newTexture = NULL;
 
 	//Load image at specified path
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str()); 
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (loadedSurface == NULL)
 	{
 		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), "");
@@ -214,7 +233,7 @@ LTexture* LTexture::loadFromFile(std::string path)
 	else
 	{
 		//Color key image
-		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format,255, 0xFF, 0xFF));
+		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 255, 0xFF, 0xFF));
 
 		//Create texture from surface pixels
 		newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
@@ -236,7 +255,7 @@ LTexture* LTexture::loadFromFile(std::string path)
 	//Return success
 	mTexture = newTexture;
 	return this;
-	
+
 }
 
 void LTexture::free()
@@ -330,7 +349,7 @@ bool init()
 			}
 			else
 			{
-				
+
 
 			}
 			int imgFlags = IMG_INIT_PNG;
@@ -339,7 +358,7 @@ bool init()
 				printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 				success = false;
 			}
-			
+
 		}
 	}
 
@@ -401,9 +420,9 @@ int main()
 			bool quit = false;
 
 			SDL_Event e;
-		
-			int posX =0;
-			int posY = 0;
+
+			int posX = 1;
+			int posY = 1;
 
 
 			while (!quit)
@@ -456,51 +475,63 @@ int main()
 
 						}
 					}
-						
-					
-					
+
+
+
 
 
 
 				}
-			
-					SDL_RenderClear(gRenderer);
+
+				SDL_RenderClear(gRenderer);
 
 
-					switch (mSnakeTexture->getCurrentDirection())
+				switch (mSnakeTexture->getCurrentDirection())
+				{
+				case UP:
+				{
+					std::cout << mSnakeTexture->getCurrentDirection() << std::endl;
+					if (posY <= 0)
 					{
-						case 0:
-							{
-								posY--;
-								mSnakeTexture->renderVertical(posX, posY);
-							}
-								break;
-						case 1:
-						{
-							posY++;
-							mSnakeTexture->renderVertical(posX, posY);
-						}
-						break;
-						case 2:
-						{
-							posX++;
-							mSnakeTexture->renderHorizontal(posX, posY);
-						}
-						break;
-						case 3:
-						{
-							posX--;
-							mSnakeTexture->renderHorizontal(posX, posY);
-						}
-						break;
+						SDL_Delay(1);
 					}
-
-					
-					
-				
-				
-				
-
+					posY--;
+					mSnakeTexture->renderVertical(posX, posY,true);
+				}
+				break;
+				case DOWN:
+				{
+					if (posY >= SCREEN_HEIGHT)
+					{
+						SDL_Delay(1);
+					}
+					posY++;
+					mSnakeTexture->renderVertical(posX, posY,false);
+				}
+				break;
+				case RIGHT:
+				{
+					if (posX >= SCREEN_WIDTH)
+					{
+						SDL_Delay(1);
+					}
+					posX++;
+					mSnakeTexture->renderHorizontal(posX, posY);
+				}
+				break;
+				case LEFT:
+				{
+					mSnakeTexture->SwapHeadWithTail();
+					if (posX <= 0)
+					{
+						SDL_Delay(1);
+					}
+					posX--;
+					mSnakeTexture->renderHorizontal(posX, posY);
+				}
+				break;
+				}
+				std::cout << "X: " << posX<<"Y: "<<posY<<std::endl;
 				SDL_RenderPresent(gRenderer);
 			}
 		}
