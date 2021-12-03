@@ -16,6 +16,8 @@ class Snake {
 	Direction currentDirection;
 	Direction previousDirection;
 	std::vector<LTexture> SnakeTextures;
+	LTexture* directionTexture;
+
 
 public:
 	int getlengthSnake() {
@@ -24,7 +26,7 @@ public:
 	Snake()
 	{
 		lengthSnake = 3;
-
+		directionTexture = NULL;
 		SnakeTextures = std::vector<LTexture>(lengthSnake);
 		currentDirection = Direction::RIGHT;
 		previousDirection = Direction::RIGHT;
@@ -49,6 +51,9 @@ public:
 
 		
 	}
+	bool ifDirectionChanged() {
+		return previousDirection == currentDirection;
+	}
 	int getXPosDirection()
 	{
 		return xPosDirection;
@@ -64,11 +69,12 @@ public:
 		for (auto& it : SnakeTextures) {
 			it.free();
 		}
+		directionTexture->free();
 
 	}
 	~Snake() { free(); }
 
-	void moveHorizontal(int x,int y,bool isRight)
+	void moveHorizontal(int x,int y, bool isRight)
 	{
 		int z = 0;
 		
@@ -91,6 +97,7 @@ public:
 		//	std::iter_swap(SnakeTextures.begin(), SnakeTextures.end()-1 );
 			
 		}
+		if(!ifDirectionChanged())
 		for (auto& it : SnakeTextures) {
 			if(!isUp)
 				it.render(x ,y+ LTexture::TextureSize * (++z),90);
@@ -99,6 +106,28 @@ public:
 
 			}
 		}
+		else {
+			for (auto& it : SnakeTextures) {
+				if (y < getYPosDirection()) {
+
+				if (!isUp)
+					it.render(x, y + LTexture::TextureSize * (++z), 90);
+				else {
+					it.render(x, y + LTexture::TextureSize * (++z), 270);
+
+				}
+				}
+			}
+			for (auto& it : SnakeTextures) {
+				if (currentDirection==RIGHT)
+					it.render(x + LTexture::TextureSize * ++z, y);
+				else {
+					it.render(x + LTexture::TextureSize * ++z, y, 180);
+
+				}
+			}
+		}
+		//directionTexture->render(x, y);
 
 	}
 
@@ -113,9 +142,13 @@ public:
 		head->loadImageToTexture("head.png");
 		head->setID(0);
 
+
 		LTexture* body = new LTexture();
 		body->loadImageToTexture("body.png");
 		body->setID(1);
+
+		directionTexture = new LTexture();
+		directionTexture->loadImageToTexture("L.png");
 
 		SnakeTextures[0] = *tail;
 		SnakeTextures[1] = *body;

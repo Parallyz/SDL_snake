@@ -62,8 +62,8 @@ int main()
 			int posX = 0;
 			int posY = 0;
 
-			LTexture* directionTexture = new LTexture();
-			directionTexture->loadImageToTexture("L.png");
+			
+			
 			while (!quit)
 			{
 				while (SDL_PollEvent(&e) != 0)
@@ -115,13 +115,7 @@ int main()
 
 				SDL_RenderClear(gRenderer);
 
-				SDL_Delay(500);
-				if (mSnake->getCurrentDirection() != mSnake->getPreviousDirection())
-				{
-					
-					directionTexture->render(mSnake->getXPosDirection(), mSnake->getYPosDirection()-
-						LTexture::TextureSize*mSnake->getlengthSnake());
-				}
+				
 				switch (mSnake->getCurrentDirection())
 				{
 				case UP:
@@ -151,6 +145,7 @@ int main()
 				break;
 				}
 
+				SDL_Delay(500);
 				
 				SDL_RenderPresent(gRenderer);
 			}
