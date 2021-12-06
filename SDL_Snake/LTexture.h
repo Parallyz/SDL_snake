@@ -1,5 +1,12 @@
 #include "InitSDL.h"
 
+enum Direction {
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN,
+	NONE
+};
 class LTexture
 {
 public:
@@ -7,7 +14,10 @@ public:
 
 	LTexture()
 	{
-		//Initialize
+		
+		direction = RIGHT;
+		
+
 		mTexture = NULL;
 		mWidth = 0;
 		mHeight = 0;
@@ -16,8 +26,22 @@ public:
 		ID = 0;
 
 	}
-	void setXPos(int x) { PosX = x; }
-	void setYPos(int y) { PosY = y; }
+	void randPos()
+	{
+		srand(time(0));
+		PosX = rand() % (SCREEN_WIDTH / LTexture::TextureSize);
+		PosX *= LTexture::TextureSize;
+		PosY = rand() % (SCREEN_WIDTH / LTexture::TextureSize);
+		PosY *= LTexture::TextureSize;
+		std::cout << "Apple " << PosX << std::endl;
+		
+	}
+	void setXPos(int x) { 
+		PosX = x;
+	}
+	void setYPos(int y) { 
+		PosY = y;
+	}
 
 	~LTexture()
 	{
@@ -28,7 +52,10 @@ public:
 	{
 		ID = id;
 	}
-
+	int getID()
+	{
+		return ID;
+	}
 	bool  loadImageToTexture(std::string path)
 	{
 		//Get rid of preexisting texture
@@ -71,9 +98,11 @@ public:
 
 	}
 
+	SDL_Texture* getTexture() { return mTexture; }
+
 	void free()
 	{
-		//Free texture if it exists
+		
 		if (mTexture != NULL)
 		{
 			SDL_DestroyTexture(mTexture);
@@ -84,8 +113,23 @@ public:
 			PosY = 0;
 		}
 	}
+	void setTextureDirection(Direction newdirection)
+	{
+		direction = newdirection;
+	}
+	Direction getTextureDirection()
+	{
+		return direction ;
+	}
 
-
+	void setNextTextureDirection(Direction newdirection)
+	{
+		direction = newdirection;
+	}
+	Direction getNextTextureDirection()
+	{
+		return direction;
+	}
 	void render(int x, int y, double angle = NULL, SDL_Rect* clip = NULL, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE)
 	{
 		//Set rendering space and render to screen
@@ -106,6 +150,11 @@ public:
 		SDL_RenderCopyEx(gRenderer, mTexture, clip, &renderQuad, angle, center, flip);
 	}
 
+	void renderApple()
+	{
+		this->randPos();
+		this->render(PosX, PosY);
+	}
 	int getWidth()
 	{
 		return mWidth;
@@ -128,7 +177,8 @@ public:
 private:
 	//The actual hardware texture
 	SDL_Texture* mTexture;
-
+	//Direction nextDirection;
+	Direction direction;
 	//Image dimensions
 	int mWidth;
 	int mHeight;

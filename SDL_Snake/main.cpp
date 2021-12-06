@@ -1,6 +1,6 @@
 
-#include"Snake.h"
 
+#include"Snake.h"
 
 
 void close(Snake* snake)
@@ -63,7 +63,8 @@ int main()
 			int posY = 0;
 
 			
-			
+			LTexture* apple = new LTexture();
+			apple->loadImageToTexture("apple.png");
 			while (!quit)
 			{
 				while (SDL_PollEvent(&e) != 0)
@@ -81,7 +82,7 @@ int main()
 						if (mSnake->getCurrentDirection() != UP &&
 							mSnake->getCurrentDirection() != DOWN)
 						{
-							mSnake->ChangeDirection(UP);
+							mSnake->ChangeDirection(Direction::UP);
 						}
 					}
 					else if (currentKeyStates[SDL_SCANCODE_DOWN])
@@ -89,7 +90,7 @@ int main()
 						if (mSnake->getCurrentDirection() != UP &&
 							mSnake->getCurrentDirection() != DOWN)
 						{
-							mSnake->ChangeDirection(DOWN);
+							mSnake->ChangeDirection(Direction::DOWN);
 
 						}
 					}
@@ -98,7 +99,7 @@ int main()
 						if (mSnake->getCurrentDirection() != LEFT &&
 							mSnake->getCurrentDirection() != RIGHT)
 						{
-							mSnake->ChangeDirection(LEFT);
+							mSnake->ChangeDirection(Direction::LEFT);
 
 						}
 					}
@@ -107,7 +108,7 @@ int main()
 						if (mSnake->getCurrentDirection() != LEFT &&
 							mSnake->getCurrentDirection() != RIGHT)
 						{
-							mSnake->ChangeDirection(RIGHT);
+							mSnake->ChangeDirection(Direction::RIGHT);
 
 						}
 					}
@@ -116,43 +117,19 @@ int main()
 				SDL_RenderClear(gRenderer);
 
 				
-				switch (mSnake->getCurrentDirection())
-				{
-				case UP:
-				{
-					posY -= LTexture::TextureSize;
-					mSnake->moveVertical(posX, posY, true);
-					
-				}
-				break;
-				case DOWN:
-				{
-					posY += LTexture::TextureSize;
-					mSnake->moveVertical(posX, posY, false);
-				}
-				break;
-				case RIGHT:
-				{
-					posX += LTexture::TextureSize;
-					mSnake->moveHorizontal(posX,posY, true);
-				}
-				break;
-				case LEFT:
-				{
-					posX -= LTexture::TextureSize;
-					mSnake->moveHorizontal(posX, posY, false);
-				}
-				break;
-				}
+				mSnake->move(mSnake->getCurrentDirection());
+				apple->renderApple();
 
 				SDL_Delay(500);
 				
 				SDL_RenderPresent(gRenderer);
 			}
+			apple->free();
 		}
+		
 	}
 
-
+	
 	close(mSnake);
 
 	return 0;
