@@ -126,10 +126,7 @@ public:
 	{
 		direction = newdirection;
 	}
-	Direction getNextTextureDirection()
-	{
-		return direction;
-	}
+
 	void render(int x, int y, double angle = NULL, SDL_Rect* clip = NULL, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE)
 	{
 		//Set rendering space and render to screen
@@ -150,9 +147,12 @@ public:
 		SDL_RenderCopyEx(gRenderer, mTexture, clip, &renderQuad, angle, center, flip);
 	}
 
-	void renderApple()
+	void renderApple(bool Random)
 	{
-		this->randPos();
+		if (Random)
+		{
+			this->randPos();
+		}
 		this->render(PosX, PosY);
 	}
 	int getWidth()

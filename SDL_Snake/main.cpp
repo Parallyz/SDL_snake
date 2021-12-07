@@ -62,11 +62,13 @@ int main()
 			int posX = 0;
 			int posY = 0;
 
+			bool start = true;
 			
 			LTexture* apple = new LTexture();
 			apple->loadImageToTexture("apple.png");
 			while (!quit)
 			{
+
 				while (SDL_PollEvent(&e) != 0)
 				{
 					//User requests quit
@@ -117,10 +119,13 @@ int main()
 				SDL_RenderClear(gRenderer);
 
 				
-				mSnake->move(mSnake->getCurrentDirection());
-				apple->renderApple();
+				mSnake->move(apple);
+				
 
-				SDL_Delay(500);
+				apple->renderApple(start);
+				start = false;
+
+				SDL_Delay(300);
 				
 				SDL_RenderPresent(gRenderer);
 			}
