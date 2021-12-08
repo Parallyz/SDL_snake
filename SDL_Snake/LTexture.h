@@ -31,9 +31,13 @@ public:
 		srand(time(0));
 		PosX = rand() % (SCREEN_WIDTH / LTexture::TextureSize);
 		PosX *= LTexture::TextureSize;
-		PosY = rand() % (SCREEN_WIDTH / LTexture::TextureSize);
+		if(PosX>= SCREEN_WIDTH)
+		PosX-= LTexture::TextureSize;
+		PosY = rand() % (SCREEN_HEIGHT / LTexture::TextureSize);
 		PosY *= LTexture::TextureSize;
-		std::cout << "Apple " << PosX << std::endl;
+		if (PosY >= SCREEN_HEIGHT)
+		PosY-= LTexture::TextureSize;
+		//std::cout << "Apple " << PosX << std::endl;
 		
 	}
 	void setXPos(int x) { 

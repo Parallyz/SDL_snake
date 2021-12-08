@@ -39,11 +39,30 @@ public:
 				return it.getTextureDirection();
 			}
 		}
-		return currentDirection;
+		return  SnakeTextures.back().getTextureDirection();;
 	}
 	void ChangeDirection(Direction newDirection)
 	{
 		SnakeTextures.back().setTextureDirection(newDirection);
+
+		switch (newDirection)
+		{
+		case LEFT:
+		//	SnakeTextures.back().setXPos(SnakeTextures.back().getPosX() - (LTexture::TextureSize * 2));
+			break;
+		case RIGHT:
+			break;
+		case UP:
+			break;
+		case DOWN:
+			break;
+		case NONE:
+			break;
+		default:
+			break;
+		}
+		
+
 	}
 
 
@@ -59,71 +78,32 @@ public:
 	}
 	~Snake() { free(); }
 
-	/*void moveHorizontal(int x, int y, bool isRight)
+	bool ifGameOver()
 	{
-		int z = 0;
-
-		for (auto& it : SnakeTextures) {
-			if (isRight)
-				it.render(x + LTexture::TextureSize * ++z, y);
-			else {
-				it.render(x + LTexture::TextureSize * ++z, y, 180);
-
-			}
+		
+		if (SnakeTextures.end()->getPosX() >= SCREEN_WIDTH || SnakeTextures.end()->getPosY() >= SCREEN_HEIGHT
+			|| SnakeTextures.end()->getPosX() < 0 || SnakeTextures.end()->getPosY() < 0)
+		{
+			return true;
 		}
+		return false;
+	}
 
-	}*/
-	//void moveVertical( int x,int y, bool isUp)
-	//{		
-	//	int z = 0;
-	//	if (isUp)
-	//	{
-	//		
-	//	//	std::iter_swap(SnakeTextures.begin(), SnakeTextures.end()-1 );
-	//		
-	//	}
-	//	
-	//	for (auto& it : SnakeTextures) {
-	//		if(!isUp)
-	//			it.render(x ,y+ LTexture::TextureSize * (++z),90);
-	//		else {
-	//			it.render(x, y + LTexture::TextureSize * (++z), 270);
 
-	//		}
-	//	}
-	//	
-	//		for (auto& it : SnakeTextures) {
-	//			if (y < getYPosDirection()) {
-
-	//			if (!isUp)
-	//				it.render(x, y + LTexture::TextureSize * (++z), 90);
-	//			else {
-	//				it.render(x, y + LTexture::TextureSize * (++z), 270);
-
-	//			}
-	//			}
-	//		}
-	//		for (auto& it : SnakeTextures) {
-	//			if (currentDirection==RIGHT)
-	//				it.render(x + LTexture::TextureSize * ++z, y);
-	//			else {
-	//				it.render(x + LTexture::TextureSize * ++z, y, 180);
-
-	//			}
-	//		}
-	//	
-	//	//directionTexture->render(x, y);
-
-	//}
 	void renderSnakeTexture(LTexture& texture, Direction direction,LTexture& apple)
 	{
 		SDL_Rect* renderQuad = new SDL_Rect();
 		int angle = 0;
+		bool ifrender = true;
 		switch (direction)
 		{
 		case LEFT: {
 			angle = 180;
-			renderQuad->x = texture.getPosX() - LTexture::TextureSize;
+			renderQuad->x = texture.getPosX() - LTexture::TextureSize ;
+			if (texture.getID() == lengthSnake) {
+			  // renderQuad->x = texture.getPosX() - (LTexture::TextureSize*2);
+				ifrender = false;
+			 }
 			renderQuad->y = texture.getPosY();
 
 		}
@@ -148,7 +128,7 @@ public:
 			angle = 90;
 			renderQuad->x = texture.getPosX();
 			renderQuad->y = texture.getPosY() + LTexture::TextureSize;
-			grow();
+			//grow();
 		}
 				 break;
 		case NONE: {
@@ -164,11 +144,16 @@ public:
 
 		texture.setTextureDirection(direction);
 		
+		
 		texture.setXPos(renderQuad->x);
 		texture.setYPos(renderQuad->y);
-
+		if (ifGameOver())
+		{
+			SDL_Delay(1);
+		}
 		if (renderQuad->x == apple.getPosX() &&
-			renderQuad->y == apple.getPosY())
+			renderQuad->y == apple.getPosY()&&
+			texture.getID() == SnakeTextures.back().getID()-1)
 		{
 			grow();
 			apple.randPos();
@@ -176,6 +161,7 @@ public:
 
 		std::cout << "Block ID: " << texture.getID() << "    X: " << texture.getPosX() << "  Y: " << texture.getPosY() << std::endl;
 
+		if(ifrender)
 		SDL_RenderCopyEx(gRenderer, texture.getTexture(), NULL, renderQuad, angle, NULL, SDL_FLIP_NONE);
 	}
 
@@ -184,30 +170,32 @@ public:
 		LTexture* newbody = new LTexture();
 		newbody->loadImageToTexture("body.png");
 
-		newbody->setID(SnakeTextures.size());
-
-		SnakeTextures.back().setID(SnakeTextures.size() + 1);
+		newbody->setID(SnakeTextures.size()-1);
 		SnakeTextures.reserve(SnakeTextures.size() + 1);
-		lengthSnake = SnakeTextures.size() + 1;
-
-		std::vector<LTexture>::iterator it = SnakeTextures.end() - 1;
-
+		std::vector<LTexture>::iterator it = SnakeTextures.end() - 2;
 		SnakeTextures.insert(it, *newbody);
+		it = SnakeTextures.end() - 2;
+		it->setID(SnakeTextures.size() - 1);
+		SnakeTextures.back().setID(SnakeTextures.size());
+		lengthSnake = SnakeTextures.size() ;
+		
+		
+		
+
+	
+
+	
+
 	}
 
 	void move(LTexture * apple) {
 
 
 		for (auto &it : SnakeTextures) {
-			if (getNextDirection(it.getID())==it.getTextureDirection())
-			{
-				renderSnakeTexture(it, it.getTextureDirection(),*apple);
-
-			}
-			else {
+			
 
 			renderSnakeTexture(it, getNextDirection(it.getID()),*apple);
-			}
+			
 
 		}
 	}
@@ -222,7 +210,7 @@ public:
 
 		LTexture* head = new LTexture();
 		head->loadImageToTexture("head.png");
-		head->setID(6);
+		head->setID(5);
 
 
 		LTexture* body = new LTexture();
@@ -238,20 +226,21 @@ public:
 		body2->loadImageToTexture("body.png");
 		body2->setID(4);
 		LTexture* body3 = new LTexture();
-		body3->loadImageToTexture("body.png");
-		body3->setID(5);
+		body3->loadImageToTexture("test.png");
+		body3->setID(6);
 
 		tail->setXPos(0);
 		tail->setYPos(0);
 
 		SnakeTextures.resize(6);
+		lengthSnake = 6;
 
 		SnakeTextures[0] = *tail;
 		SnakeTextures[1] = *body;
 		SnakeTextures[2] = *body1;
 		SnakeTextures[3] = *body2;
-		SnakeTextures[4] = *body3;
-		SnakeTextures[5] = *head;
+		SnakeTextures[4] = *head;
+		SnakeTextures[5] = *body3;
 
 
 

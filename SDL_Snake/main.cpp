@@ -117,15 +117,15 @@ int main()
 				}
 
 				SDL_RenderClear(gRenderer);
-
-				
-				mSnake->move(apple);
-				
-
 				apple->renderApple(start);
+				mSnake->move(apple);
+
+			//	SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 0);
+				
+
 				start = false;
 
-				SDL_Delay(300);
+				SDL_Delay(120);
 				
 				SDL_RenderPresent(gRenderer);
 			}
