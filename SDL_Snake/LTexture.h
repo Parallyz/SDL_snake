@@ -16,8 +16,8 @@ public:
 	{
 		
 		direction = RIGHT;
-		
-
+		previousdirection = RIGHT;
+		angle = 0;
 		mTexture = NULL;
 		mWidth = 0;
 		mHeight = 0;
@@ -116,6 +116,7 @@ public:
 			mHeight = 0;
 			PosX = 0;
 			PosY = 0;
+			angle = 0;
 		}
 	}
 	void setTextureDirection(Direction newdirection)
@@ -126,8 +127,14 @@ public:
 	{
 		return direction ;
 	}
-
-
+	void setPreviousDirection(Direction prevDir)
+	{
+		previousdirection = prevDir;
+	}
+	Direction getPreviousDirection()
+	{
+		return previousdirection;
+	}
 	void render(int x, int y, double angle = NULL, SDL_Rect* clip = NULL, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE)
 	{
 		//Set rendering space and render to screen
@@ -136,7 +143,7 @@ public:
 		this->PosX = x;
 		this->PosY = y;
 
-		std::cout << "Block ID: " << this->ID << "  X: " << x << "  Y: " << y << std::endl;
+	//	std::cout << "Block ID: " << this->ID << "  X: " << x << "  Y: " << y << std::endl;
 		//Set clip rendering dimensions
 		if (clip != NULL)
 		{
@@ -175,15 +182,29 @@ public:
 	{
 		return PosY;
 	}
+	
+
+	int getAngle()
+	{
+		return angle;
+	}
+
+	void setAngle(int newangle)
+	{
+		angle = newangle;
+	}
 private:
 	//The actual hardware texture
 	SDL_Texture* mTexture;
 	//Direction nextDirection;
 	Direction direction;
+	Direction previousdirection;
+
 	//Image dimensions
 	int mWidth;
 	int mHeight;
 
+	int angle;
 	int PosX;
 	int PosY;
 	int ID;
