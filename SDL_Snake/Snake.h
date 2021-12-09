@@ -23,22 +23,19 @@ public:
 		for (auto& it : SnakeTextures) {
 			if (it.getID() - 1 == idTexture)
 			{
-				
+
 				return it.getTextureDirection();
 			}
 		}
-		return currentDirection;
+		return SnakeTextures.back().getTextureDirection();;
 	}
 	void ChangeDirection(Direction newDirection)
 	{
 		SnakeTextures.back().setPreviousDirection(SnakeTextures.back().getTextureDirection());
 		SnakeTextures.back().setTextureDirection(newDirection);
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> ac54b742082ca33e05d70a8d517958ce73e26ac8
 	}
 
 
@@ -59,7 +56,7 @@ public:
 
 		if (x >= SCREEN_WIDTH
 			|| y >= SCREEN_HEIGHT
-			|| x <= 0//- LTexture::TextureSize 
+			|| x < 0// LTexture::TextureSize 
 			|| y < 0)
 		{
 			return true;
@@ -69,17 +66,7 @@ public:
 
 	bool isHeadisOnTexture(int x, int y, Direction direction)
 	{
-		/*switch (direction)
-		{
-		case LEFT:
-			x += LTexture::TextureSize;
-			break;
 
-		case UP:
-			y += LTexture::TextureSize;
-			break;
-
-		}*/
 		for (auto it = SnakeTextures.begin(); it != SnakeTextures.end() - 2; ++it)
 		{
 			if (x >= it->getPosX() && x <= it->getPosX() + LTexture::TextureSize
@@ -92,7 +79,7 @@ public:
 		return false;
 	}
 
-	void renderSnakeTexture( LTexture& texture)
+	void renderSnakeTexture(LTexture& texture)
 	{
 		SDL_Rect* renderQuad = new SDL_Rect();
 
@@ -104,25 +91,6 @@ public:
 		renderQuad->w = texture.getWidth();
 		renderQuad->h = texture.getHeight();
 
-<<<<<<< HEAD
-		texture.setTextureDirection(direction);
-		
-		
-		texture.setXPos(renderQuad->x);
-		texture.setYPos(renderQuad->y);
-		if (ifGameOver())
-	{
-			SDL_Delay(1);
-		}
-	if (renderQuad->x == apple.getPosX() &&
-		renderQuad->y == apple.getPosY() &&
-		texture.getID() == SnakeTextures.back().getID() - 1)
-	{
-			grow();
-		apple.randPos();
-	}
-=======
->>>>>>> ac54b742082ca33e05d70a8d517958ce73e26ac8
 
 		std::cout << "Block ID: " << texture.getID() << "    X: " << texture.getPosX() << "  Y: " << texture.getPosY() << std::endl;
 
@@ -131,35 +99,54 @@ public:
 
 	}
 
-	LTexture* grow()
+	void grow()
 	{
 		LTexture* newbody = new LTexture();
 		newbody->loadImageToTexture("body.png");
 
 
-		std::vector<LTexture>::iterator it = SnakeTextures.end() - 1;
+		std::vector<LTexture>::iterator it = SnakeTextures.end() - 2;
 
 
 
-
+		newbody->setID(SnakeTextures.size() - 1);
 		newbody->setXPos(it->getPosX());
 		newbody->setYPos(it->getPosY());
-
+		newbody->setTextureDirection((SnakeTextures.end() - 3)->getTextureDirection());
 		SnakeTextures.insert(it, *newbody);
-		it = SnakeTextures.end() - 2;
-		it->setID(SnakeTextures.size() - 1);
-		for (it = SnakeTextures.end() - 1; it != SnakeTextures.end(); ++it)
+
+		
+		for (it = SnakeTextures.end() - 2; it != SnakeTextures.end(); ++it)
 		{
 			it->setID(it->getID() + 1);
+			switch (it->getTextureDirection())
+			{
+				case UP:
+				{
+					it->setYPos(it->getPosY() - LTexture::TextureSize);
+				}
+				break;
+				case DOWN:
+				{
+					it->setYPos(it->getPosY() + LTexture::TextureSize );
+				}
+				break;
+				case RIGHT:
+				{
+					it->setXPos(it->getPosX() + LTexture::TextureSize );
+				}
+				break;
+				case LEFT:
+				{
+					it->setXPos(it->getPosX() - LTexture::TextureSize );
+				}
+				break;
+			}
 		}
 
 
 
 
-		it = SnakeTextures.end() - 1;
-
-
-		return it->getTexture();
 
 
 	}
@@ -175,7 +162,7 @@ public:
 
 			texture.setXPos(texture.getPosX() - LTexture::TextureSize);
 			texture.setYPos(texture.getPosY());
-			if(index == SnakeTextures.size()&&direction!=texture.getPreviousDirection()) {
+			if (index == SnakeTextures.size() && direction != texture.getPreviousDirection()) {
 				if (texture.getPreviousDirection() == UP)
 				{
 					texture.setXPos(texture.getPosX() - LTexture::TextureSize);
@@ -191,8 +178,8 @@ public:
 				}
 			}
 		}
-		
-		 break;
+
+				 break;
 		case RIGHT: {
 			texture.setAngle(0);
 
@@ -201,20 +188,20 @@ public:
 			if (index == SnakeTextures.size() && direction != texture.getPreviousDirection()) {
 				if (texture.getPreviousDirection() == UP)
 				{
-					texture.setXPos(texture.getPosX() + LTexture::TextureSize );
+					texture.setXPos(texture.getPosX() + LTexture::TextureSize);
 					texture.setYPos(texture.getPosY() + LTexture::TextureSize);
 
 				}
 				if (texture.getPreviousDirection() == DOWN)
 				{
-					texture.setXPos(texture.getPosX() + LTexture::TextureSize );
-					texture.setYPos(texture.getPosY() - LTexture::TextureSize );
+					texture.setXPos(texture.getPosX() + LTexture::TextureSize);
+					texture.setYPos(texture.getPosY() - LTexture::TextureSize);
 
 				}
 			}
 
 		}
-		 break;
+				  break;
 
 		case UP: {
 			texture.setAngle(270);
@@ -242,14 +229,14 @@ public:
 		case DOWN: {
 			texture.setAngle(90);
 
-		
+
 			texture.setXPos(texture.getPosX());
 			texture.setYPos(texture.getPosY() + LTexture::TextureSize);
 			if (index == SnakeTextures.size() && direction != texture.getPreviousDirection()) {
 				if (texture.getPreviousDirection() == RIGHT)
 				{
-						texture.setXPos(texture.getPosX() - LTexture::TextureSize );
-						texture.setYPos(texture.getPosY() + LTexture::TextureSize);
+					texture.setXPos(texture.getPosX() - LTexture::TextureSize);
+					texture.setYPos(texture.getPosY() + LTexture::TextureSize);
 
 
 				}
@@ -269,11 +256,12 @@ public:
 		texture.setPreviousDirection(texture.getTextureDirection());
 		texture.setTextureDirection(direction);
 
-		if (index == (SnakeTextures.size()))
+		if (index == (SnakeTextures.size()) - 1)
 		{
 
-			/*if (isGameOver(texture.getPosX(), texture.getPosY())
-				|| isHeadisOnTexture(texture.getPosX(), texture.getPosY(), direction))
+			if (isGameOver(texture.getPosX(), texture.getPosY())
+				//|| isHeadisOnTexture(texture.getPosX(), texture.getPosY(), direction)
+				)
 			{
 				SDL_Delay(10000);
 			}
@@ -282,7 +270,7 @@ public:
 			{
 				isGrow = true;
 
-			}*/
+			}
 
 		}
 		return isGrow;
@@ -294,13 +282,22 @@ public:
 		int i = 1;
 		bool isGrow = false;
 		for (auto& it : SnakeTextures) {
-			isGrow = changeDirection(i++,it, getNextDirection(it.getID()), *apple);
-			 renderSnakeTexture(it );
+			if (it.getID() == (SnakeTextures.end() - 2)->getID())
+			{
+				isGrow = changeDirection(i++, it, getNextDirection(it.getID()), *apple);
+			}
+			else {
+
+				changeDirection(i++, it, getNextDirection(it.getID()), *apple);
+			}
+			renderSnakeTexture(it);
 
 		}
 		if (isGrow)
 		{
 			grow();
+			
+			isGrow = false;
 		}
 	}
 
@@ -319,21 +316,24 @@ public:
 		head->loadImageToTexture("head.png");
 		head->setID(3);
 
-
-
+		LTexture* head1 = new LTexture();
+		head1->setID(4);
+		SnakeTextures.resize(4);
 
 
 		tail->setXPos(0);
 		tail->setYPos(0);
 
-	
-		SnakeTextures.resize(3);
+
+
 
 		SnakeTextures[0] = *tail;
 		SnakeTextures[1] = *body;
 
 		SnakeTextures[2] = *head;
-	
+		SnakeTextures[3] = *head1;
+
+
 
 
 
@@ -343,7 +343,7 @@ public:
 			it.setXPos(it.getPosX() + LTexture::TextureSize * ++x);
 			it.setYPos(it.getPosY() + LTexture::TextureSize);
 
-			it.render(it.getPosX() , it.getPosY());
+			it.render(it.getPosX(), it.getPosY());
 		}
 
 		return true;

@@ -140,8 +140,7 @@ public:
 		//Set rendering space and render to screen
 		SDL_Rect renderQuad = { x, y, mWidth, mHeight };
 
-		this->PosX = x;
-		this->PosY = y;
+		
 
 	//	std::cout << "Block ID: " << this->ID << "  X: " << x << "  Y: " << y << std::endl;
 		//Set clip rendering dimensions
