@@ -102,8 +102,9 @@ public:
 
 	}
 
-	SDL_Texture* getTexture() { return mTexture; }
+	SDL_Texture* getSDLTexture() { return mTexture; }
 
+	LTexture* getTexture() { return this; }
 	void free()
 	{
 		
@@ -126,10 +127,6 @@ public:
 		return direction ;
 	}
 
-	void setNextTextureDirection(Direction newdirection)
-	{
-		direction = newdirection;
-	}
 
 	void render(int x, int y, double angle = NULL, SDL_Rect* clip = NULL, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE)
 	{
