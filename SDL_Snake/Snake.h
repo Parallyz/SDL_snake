@@ -39,30 +39,11 @@ public:
 				return it.getTextureDirection();
 			}
 		}
-		return  SnakeTextures.back().getTextureDirection();;
+		return currentDirection;
 	}
 	void ChangeDirection(Direction newDirection)
 	{
 		SnakeTextures.back().setTextureDirection(newDirection);
-
-		switch (newDirection)
-		{
-		case LEFT:
-		//	SnakeTextures.back().setXPos(SnakeTextures.back().getPosX() - (LTexture::TextureSize * 2));
-			break;
-		case RIGHT:
-			break;
-		case UP:
-			break;
-		case DOWN:
-			break;
-		case NONE:
-			break;
-		default:
-			break;
-		}
-		
-
 	}
 
 
@@ -148,16 +129,16 @@ public:
 		texture.setXPos(renderQuad->x);
 		texture.setYPos(renderQuad->y);
 		if (ifGameOver())
-		{
+	{
 			SDL_Delay(1);
 		}
-		if (renderQuad->x == apple.getPosX() &&
-			renderQuad->y == apple.getPosY()&&
-			texture.getID() == SnakeTextures.back().getID()-1)
-		{
+	if (renderQuad->x == apple.getPosX() &&
+		renderQuad->y == apple.getPosY() &&
+		texture.getID() == SnakeTextures.back().getID() - 1)
+	{
 			grow();
-			apple.randPos();
-		}
+		apple.randPos();
+	}
 
 		std::cout << "Block ID: " << texture.getID() << "    X: " << texture.getPosX() << "  Y: " << texture.getPosY() << std::endl;
 
