@@ -63,7 +63,7 @@ public:
 	bool  loadImageToTexture(std::string path)
 	{
 		//Get rid of preexisting texture
-		free();
+	//	free();
 
 		//The final texture
 		SDL_Texture* newTexture = NULL;
@@ -112,11 +112,7 @@ public:
 		{
 			SDL_DestroyTexture(mTexture);
 			mTexture = NULL;
-			mWidth = 0;
-			mHeight = 0;
-			PosX = 0;
-			PosY = 0;
-			angle = 0;
+			
 		}
 	}
 	void setTextureDirection(Direction newdirection)
