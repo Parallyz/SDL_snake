@@ -23,7 +23,7 @@ and replace the files:
 To files of the corresponding bit size from folders:
 
 - % PATH% \ SDL2 \ lib \ x64;
-and
+
 - % PATH% \ SDL2_image-2.0.5 \ lib \ x64;
 
 That's all you need
