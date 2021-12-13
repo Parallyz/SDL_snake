@@ -11,7 +11,7 @@ then the snake will increase. And do not touch the borders and parts of the snak
 
 To run, you need to download the debuk folder and run the exe file
 
-This project is written on the x64 bit system, so if you have another bit you need to  to download the SDL2-devel-2.0 and SDL2_image-devel-2.0.5 libraries to run the game
+This project is written on the x86 bit system, so if you have another bit you need to  to download the SDL2-devel-2.0 and SDL2_image-devel-2.0.5 libraries to run the game
 and replace the files:
 
 
@@ -21,9 +21,10 @@ and replace the files:
 - libpng16-16.dll
 
 To files of the corresponding bit size from folders:
-% PATH% \ SDL2 \ lib \ x86;
+
+- % PATH% \ SDL2 \ lib \ x64;
 and
-% PATH% \ SDL2_image-2.0.5 \ lib \ x86;
+- % PATH% \ SDL2_image-2.0.5 \ lib \ x64;
 
 That's all you need
 
