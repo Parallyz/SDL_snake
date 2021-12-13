@@ -1,4 +1,6 @@
 #include "InitSDL.h"
+#include <time.h>
+
 
 enum Direction {
 	LEFT,
@@ -28,7 +30,7 @@ public:
 	}
 	void randPos()
 	{
-		srand(time(0));
+		srand(static_cast<unsigned int>(time(nullptr)));
 		PosX = rand() % (SCREEN_WIDTH / LTexture::TextureSize);
 		PosX *= LTexture::TextureSize;
 		if(PosX>= SCREEN_WIDTH)

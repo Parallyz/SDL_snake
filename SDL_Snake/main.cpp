@@ -35,7 +35,7 @@ bool LoadTexturesToSnake(Snake* snake)
 	return success;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
 	
 	Snake* mSnake = new Snake();

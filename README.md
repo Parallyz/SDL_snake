@@ -13,11 +13,14 @@ To run, you need to download the debuk folder and run the exe file
 
 This project is written on the x64 bit system, so if you have another bit you need to  to download the SDL2-devel-2.0 and SDL2_image-devel-2.0.5 libraries to run the game
 and replace the files:
-SDL2.dll
-SDL2_image.dll
-zlib1.dll
-libpng16-16.dll
-to files of the corresponding bit size from folders:
+
+
+- SDL2.dll
+- SDL2_image.dll
+- zlib1.dll
+- libpng16-16.dll
+
+To files of the corresponding bit size from folders:
 % PATH% \ SDL2 \ lib \ x86;
 and
 % PATH% \ SDL2_image-2.0.5 \ lib \ x86;

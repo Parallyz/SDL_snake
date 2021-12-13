@@ -92,8 +92,7 @@ public:
 		renderQuad->h = texture.getHeight();
 
 
-		std::cout << "Block ID: " << texture.getID() << "    X: " << texture.getPosX() << "  Y: " << texture.getPosY() << std::endl;
-
+	
 
 		SDL_RenderCopyEx(gRenderer, texture.getSDLTexture(), NULL, renderQuad, texture.getAngle(), NULL, SDL_FLIP_NONE);
 
